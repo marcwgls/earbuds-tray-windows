@@ -1,0 +1,18 @@
+# Backlog
+
+Open ideas, roughly in order. Not promises.
+
+- **Charging indicator**: show when a bud or the case is charging, in the icon and the popup. Fast Pair already sends the flag (bit 7), `BatteryView` has no field for it yet. Low value for the NeoBuds Pro 3: the Edifier F2 answer has no charging flag and the Fast Pair bit never showed up set.
+- **Fast Pair: send one documented seeker message to get the burst on connect (spec reading and mini spike first)**: explore sending one initial seeker query to reliably trigger the device info and battery burst on connect.
+- **Device choice in the menu: submenu with the paired audio devices to pin one when several are connected**: currently best tier wins; a submenu would allow user selection.
+- **Hands-Free switch**: turn the Hands-Free (HFP) service of the buds off and on from the menu, so Windows no longer drops to mono call quality when an app opens the mic. Cost: the bud mic is gone while off, so a toggle, not permanent. Already sketched in `docs/ARCHITECTURE_AND_PLAN.md` ("Hands-Free AG Killer"). Later (Marc, 2026-11-03): sound stays stereo in practice. If picked up: disable the two Hands-Free endpoints of the buds (render and capture) with `IPolicyConfig::SetEndpointVisibility`, like "Don't allow" in the Windows sound settings; needs Marc's OK for that call.
+- **Auto switch audio device**: make the buds the default (and default communications) device when they connect, restore the previous device when they disconnect. Skipped for now: Windows already switches correctly in most setups.
+- **Absolute volume toggle**: Windows couples its volume to the bud volume (AVRCP absolute volume), which often makes the steps too coarse or too loud. Registry switch `DisableAbsoluteVolume`, needs admin rights and a Bluetooth service restart, so offer it as an explicit option.
+- **Bluetooth power saving check**: "Allow the computer to turn off this device" on the Bluetooth adapter is a common cause of dropouts. Detect it and show a hint, do not change it automatically.
+- **Active codec (SBC, AAC, aptX, ...)**: show which codec is in use, in the tooltip or popup. Spike done (`docs/CODEC_SPIKE.md`): readable only through an ETW trace, which needs admin rights. Windows picks AAC for the NeoBuds Pro 3, the best the inbox stack can do. Not built for now.
+- **Edifier controls (ANC, game mode / low latency, EQ)**: switch from the tray. Requires deliberately relaxing the "only `Query::BatteryF2`" safety rule, so first a protocol research phase like Phase 1 for each write command, then implementation. Needs its own research step.
+- **Driver trait**: when a second earbud brand is added, turn `DeviceProfile` (Phase 6) plus the hardwired Edifier worker into a proper driver interface (connect, safe query, parser to `BatteryView`, profile).
+- **Soundcore and Sony vendor drivers**: need a test device and a relaxed safety rule (Soundcore needs a state request, Sony needs an init handshake and ACKs; Sony opcode `0x22` is power off on v1). Fast Pair already covers the battery of newer models. See `docs/DEVICE_SUPPORT_RESEARCH.md`.
+- **Galaxy and Fast Pair: pause before reconnect**: when the buds close the listen channel right after connect, the worker reconnects at once without a delay. Could make the icon flicker. Only matters if real Galaxy Buds behave like that.
+- **Galaxy: status with both buds at 0**: such a status is ignored, so the last values stay on screen. Fine as long as the buds send a real update later; check with real Galaxy Buds.
+- **Galaxy parser edge case and dead popup arm**: a frame can only be lost through a CRC plus EOM collision inside another frame (practically never). `popup/model.rs` has an unreachable `(Vendor::Galaxy, false)` label arm. Cleanup only.

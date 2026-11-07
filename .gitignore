@@ -1,0 +1,12 @@
+/target
+**/*.rs.bk
+*.pdb
+
+# IDE & OS
+.idea/
+.vscode/
+*.swp
+*.swo
+Thumbs.db
+Desktop.ini
+*.log

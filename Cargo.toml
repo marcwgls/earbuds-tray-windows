@@ -1,0 +1,62 @@
+[package]
+name = "earbuds-tray"
+version = "1.0.0"
+edition = "2024"
+authors = ["Marc <184940552+marcwgls@users.noreply.github.com>"]
+description = "Windows tray app that shows the battery of each earbud and the case for Bluetooth earbuds"
+repository = "https://github.com/marcwgls/earbuds-tray-windows"
+license = "GPL-3.0-or-later"
+
+[dependencies]
+anyhow = "1.0"
+thiserror = "2.0"
+tracing = "0.1"
+tracing-subscriber = "0.3"
+tray-icon = "=0.26.1"
+global-hotkey = "=0.9.0"
+tao = "=0.37.1"
+resvg = "=0.45.1"
+
+[target.'cfg(windows)'.dependencies.windows]
+version = "0.58"
+features = [
+    "Devices_Bluetooth",
+    "Devices_Bluetooth_Rfcomm",
+    "Devices_Enumeration",
+    "Devices_Enumeration_Pnp",
+    "Networking_Sockets",
+    "Storage_Streams",
+    "Foundation",
+    "Foundation_Collections",
+    "implement",
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_UI_HiDpi",
+    "Win32_System_Registry",
+    "Win32_UI_Shell",
+    "Win32_System_Com",
+    "Win32_System_Console",
+    "Win32_Security",
+    "Win32_Media_Audio",
+    "Win32_Media_KernelStreaming",
+    "Win32_Devices_FunctionDiscovery",
+    "Win32_Devices_Properties",
+    "Win32_System_Com_StructuredStorage",
+    "Win32_System_Variant",
+    "Win32_UI_Shell_PropertiesSystem",
+    "Win32_Storage_FileSystem",
+    "Win32_System_IO",
+    "Win32_System_Threading",
+    "UI_Notifications",
+    "Foundation_Numerics",
+    "Win32_Graphics_Dwm",
+    "Win32_Graphics_Gdi",
+    "Win32_Graphics_Direct2D",
+    "Win32_Graphics_Direct2D_Common",
+    "Win32_Graphics_DirectWrite",
+    "Win32_Graphics_Dxgi_Common",
+    "Win32_UI_Controls",
+    "Data_Xml_Dom",
+]
+
+[target.'cfg(windows)'.build-dependencies]
+winresource = "=0.1.34"
